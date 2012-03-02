@@ -58,7 +58,7 @@ module QuestionQueryPatch
     end
     
     # Wrapper for +sql_for_field+ so Questions can use a different table than Issues
-    def question_sql_for_field(field, operator, v, db_table, db_field, is_custom_filter=false)
+    def question_sql_for_field(field, operator, v, db_table, db_field, is_custom_filter=false, *args)
       if field == "question_assigned_to_id" || field == "question_asked_by_id"
         v = values_for(field).clone
 
@@ -83,7 +83,7 @@ module QuestionQueryPatch
         return sql
         
       else
-        return sql_for_field_before_question(field, operator, v, db_table, db_field, is_custom_filter)
+        return sql_for_field_before_question(field, operator, v, db_table, db_field, is_custom_filter, *args)
       end
       
     end
