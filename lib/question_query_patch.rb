@@ -15,6 +15,9 @@ module QuestionQueryPatch
 
       alias_method :sql_for_field_before_question, :sql_for_field
       alias_method :sql_for_field, :question_sql_for_field
+
+      alias_method :issue_ids_before_question, :issue_ids
+      alias_method :issue_ids, :question_issue_ids
     end
 
   end
@@ -36,6 +39,12 @@ module QuestionQueryPatch
   end
   
   module InstanceMethods
+
+    def question_issue_ids(options = {})
+      includes = options[:include].dup || []
+      includes << :questions
+      issue_ids_before_question options.merge(:include => includes.uniq)
+    end
     
     # Wrapper around the +available_filters+ to add a new Question filter
     def question_available_filters

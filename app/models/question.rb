@@ -11,6 +11,8 @@ class Question < ActiveRecord::Base
   validates_presence_of :issue
   validates_presence_of :journal
 
+  after_create :notify_receiver
+
   named_scope :opened, :conditions => {:opened => true}
   named_scope :for_user, lambda {|user|
     { :conditions => {:assigned_to_id => user.id }}
@@ -24,7 +26,7 @@ class Question < ActiveRecord::Base
   def for_anyone?
     self.assigned_to.nil?
   end
-  
+
   def close!(closing_journal=nil)
     if self.opened
       self.opened = false
@@ -47,4 +49,11 @@ class Question < ActiveRecord::Base
                                    true],
                    :include => [:issue => [:project]])
   end
+
+  private
+
+  def notify_receiver
+    QuestionMailer.deliver_asked_question(journal)
+  end
+  
 end
