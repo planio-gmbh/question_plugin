@@ -1,0 +1,15 @@
+<span class="question-line">
+  <a name="question-<%= question.id %>" href="#question-<%= question.id %>">
+    <% if question.assigned_to %>
+      <%= l :text_question_for %>
+      <%= question.assigned_to.to_s %>
+    <% else %>
+        <%= l :text_question_for_anyone %>
+    <% end %>
+  </a>
+  <% if question.assigned_to && question.assigned_to.mail %>
+    <span><%= avatar question.assigned_to, :size => 16, :class => '' %></span>
+  <% end %>
+</span>
+
+

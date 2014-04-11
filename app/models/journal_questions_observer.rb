@@ -6,12 +6,8 @@ class JournalQuestionsObserver < ActiveRecord::Observer
   def after_create(journal)
     if journal.question
       journal.question.save
-      # moved to after_create hook in question.rb
-      #QuestionMailer.deliver_asked_question(journal)
-    end
-
-    # Close any open questions
-    if journal.issue && journal.issue.pending_question?(journal.user)
+    elsif journal.issue && journal.issue.pending_question?(journal.user)
+      # Close any open questions
       journal.issue.close_pending_questions(journal.user, journal)
     end
   end

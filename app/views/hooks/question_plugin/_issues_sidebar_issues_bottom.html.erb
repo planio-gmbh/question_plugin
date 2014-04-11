@@ -1,0 +1,12 @@
+<% question_count =  Question.count_open_questions User.current, @project %>
+<% if question_count > 0 %>
+  <%= link_to l(:text_questions_for_me) + " (#{question_count})",
+                 {
+                   :controller => 'questions',
+                   :action => 'my_issue_filter',
+                   :project => @project,
+                   :only_path => true
+                 },
+                 { :class => 'question-link' }
+   %><br />
+<% end %>

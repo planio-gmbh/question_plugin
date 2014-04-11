@@ -1,0 +1,28 @@
+<% assigned_to = (journal.question && journal.question.opened && journal.question.assigned_to) ? journal.question.assigned_to : nil %>
+
+<p>
+  <label><%= l :field_question_assign_to %></label>
+  <% if assigned_to %>
+    <%= hidden_field_tag 'question[assigned_to]', assigned_to.id %>
+    <%= text_field_tag 'question[assigned_to_name]', "#{assigned_to.login} (#{h assigned_to.name(:lastname_coma_firstname)})", :size => "40" %>
+  <% elsif journal.question %>
+    <%= hidden_field_tag 'question[assigned_to]', 'anyone' %>
+    <%= text_field_tag 'question[assigned_to_name]', l(:text_anyone), :size => "40" %>
+  <% else %>
+    <%= hidden_field_tag 'question[assigned_to]', '' %>
+    <%= text_field_tag 'question[assigned_to_name]', '', :size => "40" %>
+  <% end %>
+</p>
+
+<%= javascript_tag do %>
+  observeAutocompleteField('question_assigned_to_name',
+                           '<%= escape_javascript autocomplete_for_question_assignee_path(project_id: journal.project, issue_id: journal.issue) %>',
+                           {
+    select: function(event, ui) {
+      $('#question_assigned_to').val(ui.item.id);
+      $('#question_assigned_to_name').val(ui.item.label);
+      event.preventDefault();
+    }
+  });
+<% end %>
+

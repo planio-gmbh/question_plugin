@@ -1,0 +1,8 @@
+<% if journal && journal.question && journal.question.opened? %>
+
+  <%= javascript_tag do %>
+    $('#change-<%= journal.id %>').addClass('question');
+    $('#change-<%= journal.id %> h4').after('<%= escape_javascript render partial: "question_plugin/question", locals: {question: journal.question} %>');
+   <% end %>
+
+ <% end %>

@@ -1,0 +1,17 @@
+<p>
+  <label><%= l :field_question_assign_to %></label>
+  <%= hidden_field_tag 'note[question_assigned_to]' %>
+  <%= text_field_tag 'note[question_assigned_to_name]', nil, size: 40 %>
+</p>
+
+<%= javascript_tag do %>
+  observeAutocompleteField('note_question_assigned_to_name',
+                           '<%= escape_javascript autocomplete_for_question_assignee_path(project_id: @issue.project, issue_id: @issue) %>',
+                           {
+    select: function(event, ui) {
+      $('#note_question_assigned_to').val(ui.item.id);
+      $('#note_question_assigned_to_name').val(ui.item.label);
+      event.preventDefault();
+    }
+  });
+<% end %>
