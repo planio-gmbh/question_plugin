@@ -16,7 +16,7 @@
 
 <%= javascript_tag do %>
   observeAutocompleteField('question_assigned_to_name',
-                           '<%= escape_javascript autocomplete_for_question_assignee_path(project_id: journal.project, issue_id: journal.issue) %>',
+                           '<%= escape_javascript autocomplete_for_question_assignee_path(project_id: journal.project, issue_id: journal.issue).html_safe %>',
                            {
     select: function(event, ui) {
       $('#question_assigned_to').val(ui.item.id);
