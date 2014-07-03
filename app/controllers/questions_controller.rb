@@ -21,7 +21,8 @@ class QuestionsController < ApplicationController
       issue = @project.issues.find params[:issue_id]
       @users.unshift issue.assigned_to if issue.assigned_to
       @users.unshift issue.author if issue.author
-      @users.reject!{|u| u == User.current}.uniq!
+      @users.reject!{|u| u == User.current}
+      @users.uniq!
     end
 
     render :layout => false
