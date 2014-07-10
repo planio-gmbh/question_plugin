@@ -48,7 +48,7 @@ module QuestionPlugin
             when "="
               sql = "#{db_table}.#{db_field} IN (" + v.collect{|val| "'#{connection.quote_string(val)}'"}.join(",") + ") AND #{db_table}.opened = true"
             when "!"
-              sql = "(#{db_table}.#{db_field} IS NULL OR #{db_table}.#{db_field} NOT IN (" + v.collect{|val| "'#{connection.quote_string(val)}'"}.join(",") + ")) AND #{db_↪table}.opened = true"
+              sql = "(#{db_table}.#{db_field} IS NULL OR #{db_table}.#{db_field} NOT IN (" + v.collect{|val| "'#{connection.quote_string(val)}'"}.join(",") + ")) AND #{db_table}.opened = true"
             end
 
             return sql
@@ -59,9 +59,7 @@ module QuestionPlugin
         end
 
         def issue_count_with_questions
-          Issue.visible.count(joins: :questions, :include => [:status, :project], :conditions => statement)
-        rescue ::ActiveRecord::StatementInvalid => e
-          raise StatementInvalid.new(e.message)
+          Issue.visible.count(:include => [:status, :project, :questions], :conditions => statement)
         end
 
         # Wrapper around the +initialize_available_filters+
