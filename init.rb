@@ -1,18 +1,12 @@
 require 'question_plugin/hooks'
 
-#require 'question_kanban_hooks'
-
 Rails.configuration.to_prepare do
-  require_dependency 'issue'
   Issue.send(:include, QuestionPlugin::Patches::IssuePatch) unless Issue.included_modules.include? QuestionPlugin::Patches::IssuePatch
 
-  require_dependency 'journal'
   Journal.send(:include, QuestionPlugin::Patches::JournalPatch) unless Journal.included_modules.include? QuestionPlugin::Patches::JournalPatch
 
-  require_dependency 'queries_helper'
   QueriesHelper.send(:include, QuestionPlugin::Patches::QueriesHelperPatch) unless QueriesHelper.included_modules.include? QuestionPlugin::Patches::QueriesHelperPatch
 
-  require_dependency "issue_query"
   IssueQuery.send(:include, QuestionPlugin::Patches::QueryPatch) unless IssueQuery.included_modules.include? QuestionPlugin::Patches::QueryPatch
 end
 
