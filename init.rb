@@ -22,5 +22,3 @@ Redmine::Plugin.register :question_plugin do
 
 end
 
-ActiveRecord::Base.observers << :journal_questions_observer
-
