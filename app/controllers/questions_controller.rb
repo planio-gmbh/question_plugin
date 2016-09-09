@@ -1,7 +1,5 @@
 class QuestionsController < ApplicationController
-  unloadable
   before_filter :find_project, only: :autocomplete_for_user_login
-  layout 'base'
 
   # Create a query in the session and redirects to the issue list with that query
   def my_issue_filter
@@ -15,7 +13,7 @@ class QuestionsController < ApplicationController
   end
 
   def autocomplete_for_user_login
-    @users = User.active.sorted.like(params[:term]).limit(100).all
+    @users = User.active.sorted.like(params[:term]).limit(100).to_a
     if @project && params[:issue_id] && User.current.allowed_to?(:view_issues, @project)
 
       issue = @project.issues.find params[:issue_id]
