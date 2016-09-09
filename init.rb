@@ -7,7 +7,7 @@ Rails.configuration.to_prepare do
 
   QueriesHelper.send(:include, QuestionPlugin::Patches::QueriesHelperPatch) unless QueriesHelper.included_modules.include? QuestionPlugin::Patches::QueriesHelperPatch
 
-  QuestionPlugin::Patches::QueryPatch.apply
+  QuestionPlugin::Patches::IssueQueryPatch.apply
 end
 
 Redmine::Plugin.register :question_plugin do

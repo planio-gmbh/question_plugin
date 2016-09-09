@@ -1,7 +1,7 @@
 module QuestionPlugin
   module Patches
 
-    module QueryPatch
+    module IssueQueryPatch
       def self.apply
         # check if thats a good idea
         IssueQuery.send :prepend, self unless IssueQuery < self
