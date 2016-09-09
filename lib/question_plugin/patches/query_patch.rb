@@ -2,34 +2,22 @@ module QuestionPlugin
   module Patches
 
     module QueryPatch
-      def self.included(base) # :nodoc:
-        base.extend(ClassMethods)
+      def self.apply
+        # check if thats a good idea
+        IssueQuery.send :prepend, self unless IssueQuery < self
+      end
 
-        base.send(:include, InstanceMethods)
-
-        base.class_eval do
-          unloadable # Send unloadable so it will not be unloaded in development
-          base.add_available_column(QueryColumn.new(:formatted_questions))
-
-          alias_method_chain :initialize_available_filters, :questions
-          alias_method_chain :sql_for_field, :questions
-          alias_method_chain :joins_for_order_statement, :questions
-          alias_method_chain :issue_count, :questions
-        end
+      def self.prepended(base) # :nodoc:
+        base.add_available_column(QueryColumn.new(:formatted_questions))
 
       end
 
-      module ClassMethods
-      end
-
-      module InstanceMethods
-
-        def joins_for_order_statement_with_questions(order_options)
-          (joins_for_order_statement_without_questions(order_options) || '') +
+        def joins_for_order_statement(order_options)
+          (super(order_options) || '') +
             " left outer join questions on questions.issue_id = issues.id"
         end
 
-        def sql_for_field_with_questions(field, operator, value, db_table, db_field, is_custom_filter=false)
+        def sql_for_field(field, operator, value, db_table, db_field, is_custom_filter=false)
 
           if field == "question_assigned_to_id" || field == "question_asked_by_id"
             v = values_for(field).clone
@@ -54,18 +42,18 @@ module QuestionPlugin
             return sql
 
           else
-            return sql_for_field_without_questions(field, operator, value, db_table, db_field, is_custom_filter)
+            return super(field, operator, value, db_table, db_field, is_custom_filter)
           end
         end
 
-        def issue_count_with_questions
-          Issue.visible.count(:include => [:status, :project, :questions], :conditions => statement)
+        def base_scope
+          super.eager_load(:questions)
         end
 
         # Wrapper around the +initialize_available_filters+
         # to add a new Question filter
-        def initialize_available_filters_with_questions
-          initialize_available_filters_without_questions
+        def initialize_available_filters
+          super
 
           user_values = []
           user_values << ["<< #{l(:label_me)} >>", "me"] if User.current.logged?
@@ -82,8 +70,6 @@ module QuestionPlugin
 
         end
 
-
-      end
     end
 
   end
