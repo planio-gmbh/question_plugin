@@ -12,11 +12,6 @@ module QuestionPlugin
 
       end
 
-        def joins_for_order_statement(order_options)
-          (super(order_options) || '') +
-            " left outer join questions on questions.issue_id = issues.id"
-        end
-
         def sql_for_field(field, operator, value, db_table, db_field, is_custom_filter=false)
 
           if field == "question_assigned_to_id" || field == "question_asked_by_id"
